@@ -293,11 +293,24 @@ std::string JSONUtils::JSONStringFromParamsArray(cocos2d::__Array *array)
 
 #pragma mark - fast parse
 
+std::string convert_string(std::string s) {
+    std::stringstream ss;
+    for (size_t i = 0; i < s.length(); ++i) {
+        if (unsigned(s[i]) < '\x20' || s[i] == '\\' || s[i] == '"') {
+            ss << "\\u" << std::setfill('0') << std::setw(4) << std::hex << unsigned(s[i]);
+        } else {
+            ss << s[i];
+        }
+    }
+    return ss.str();
+}
+
 std::string JSONUtils::JSONStringFromDictionary(cocos2d::ValueMap dictionary)
 {
 	if (dictionary.empty()) {
 		return std::string("{}");
 	}
+
 	std::string returnValue = std::string("{");
 	for (ValueMap::iterator it = dictionary.begin(); it != dictionary.end(); ++it) {
 		std::string key = it->first;
@@ -309,7 +322,9 @@ std::string JSONUtils::JSONStringFromDictionary(cocos2d::ValueMap dictionary)
 			returnValue.append("\"");
 			returnValue.append(":");
 			returnValue.append("\"");
-			returnValue.append(aValue.asString().c_str());
+            std::string originalString = aValue.asString();
+            originalString = convert_string(originalString);
+			returnValue.append(originalString);
 			returnValue.append("\"");
 			returnValue.append(",");
 		} else if (aValue.getType() == cocos2d::Value::Type::FLOAT) {
@@ -392,7 +407,9 @@ std::string JSONUtils::JSONStringFromArray(cocos2d::ValueVector array)
 		if (aValue.getType() == cocos2d::Value::Type::STRING) {
 			//support string cast
 			returnString.append("\"");
-			returnString.append(aValue.asString().c_str());
+            std::string original = aValue.asString();
+            original = convert_string(original);
+			returnString.append(original);
 			returnString.append("\"");
 			returnString.append(",");
 		} else if (aValue.getType() == cocos2d::Value::Type::FLOAT) {
