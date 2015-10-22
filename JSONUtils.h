@@ -92,24 +92,24 @@ public:
      *  support string, float, integer, double, array, dictionary, bool
      *  @return JSON string
      */
-    std::string JSONStringFromDictionary(cocos2d::ValueMap dictionary);
+    std::string JSONStringFromDictionary(const cocos2d::ValueMap& dictionary);
     
     /** parse a array of object to JSON string
      *  support string, float, integer, double, array, dictionary, bool
      *  @return JSON string
      */
-    std::string JSONStringFromArray(cocos2d::ValueVector array);
+    std::string JSONStringFromArray(const cocos2d::ValueVector& array);
     
     /** parse an object to JSON string
      *  support string, float, integer, double, array, dictionary, bool
      *  @return JSON string
      */
-    std::string JSONStringFromValue(cocos2d::Value value);
+    std::string JSONStringFromValue(const cocos2d::Value& value);
     
     /** parse a string to JSON
      *  @return JSON Object
      */
-    cocos2d::Value valueFromString(std::string fileContent);
+    cocos2d::Value valueFromString(const std::string& fileContent);
     
 };
 

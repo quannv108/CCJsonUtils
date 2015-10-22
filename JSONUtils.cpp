@@ -293,7 +293,7 @@ std::string JSONUtils::JSONStringFromParamsArray(cocos2d::__Array *array)
 
 #pragma mark - fast parse
 
-std::string convert_string(std::string s) {
+std::string convert_string(const std::string& s) {
     std::stringstream ss;
     for (size_t i = 0; i < s.length(); ++i) {
         if (unsigned(s[i]) < '\x20' || s[i] == '\\' || s[i] == '"') {
@@ -305,16 +305,16 @@ std::string convert_string(std::string s) {
     return ss.str();
 }
 
-std::string JSONUtils::JSONStringFromDictionary(cocos2d::ValueMap dictionary)
+std::string JSONUtils::JSONStringFromDictionary(const cocos2d::ValueMap& dictionary)
 {
 	if (dictionary.empty()) {
 		return std::string("{}");
 	}
 
 	std::string returnValue = std::string("{");
-	for (ValueMap::iterator it = dictionary.begin(); it != dictionary.end(); ++it) {
+	for (auto it = dictionary.begin(); it != dictionary.end(); ++it) {
 		std::string key = it->first;
-		cocos2d::Value aValue = dictionary[key];
+        const cocos2d::Value& aValue = it->second;
 		if (aValue.getType() == cocos2d::Value::Type::STRING) {
 			//support string cast
 			returnValue.append("\"");
@@ -396,14 +396,14 @@ std::string JSONUtils::JSONStringFromDictionary(cocos2d::ValueMap dictionary)
 	}
 }
 
-std::string JSONUtils::JSONStringFromArray(cocos2d::ValueVector array)
+std::string JSONUtils::JSONStringFromArray(const cocos2d::ValueVector& array)
 {
 	if (array.empty()) {
 		return std::string("[]");
 	}
 	std::string returnString = std::string("[");
-	for (ValueVector::iterator it = array.begin(); it != array.end(); ++it) {
-		cocos2d::Value aValue = *it;
+	for (auto it = array.begin(); it != array.end(); ++it) {
+		const cocos2d::Value& aValue = *it;
 		if (aValue.getType() == cocos2d::Value::Type::STRING) {
 			//support string cast
 			returnString.append("\"");
@@ -459,7 +459,7 @@ std::string JSONUtils::JSONStringFromArray(cocos2d::ValueVector array)
 
 #pragma mark - fast convert to json
 
-std::string JSONUtils::JSONStringFromValue(cocos2d::Value value)
+std::string JSONUtils::JSONStringFromValue(const cocos2d::Value& value)
 {
 	if (value.isNull()) {
 		return std::string();
@@ -475,7 +475,7 @@ std::string JSONUtils::JSONStringFromValue(cocos2d::Value value)
 	return returnString;
 }
 
-cocos2d::Value JSONUtils::valueFromString(std::string fileContent)
+cocos2d::Value JSONUtils::valueFromString(const std::string& fileContent)
 {
 	Value returnValue = Value();
 	rapidjson::Document document;
